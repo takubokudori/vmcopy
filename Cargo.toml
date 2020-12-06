@@ -1,0 +1,12 @@
+[package]
+name = "vmcopy"
+version = "0.1.0"
+authors = ["takubokudori <takubokudori@gmail.com>"]
+license = "MIT or Apache-2.0"
+repository = "https://github.com/takubokudori/vmcopy"
+homepage = "https://github.com/takubokudori/vmcopy"
+edition = "2018"
+
+[dependencies]
+hvctrl = { git = "https://github.com/takubokudori/hvctrl" }
+clap = "2.33.3"
