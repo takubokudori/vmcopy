@@ -8,5 +8,5 @@ homepage = "https://github.com/takubokudori/vmcopy"
 edition = "2018"
 
 [dependencies]
-hvctrl = { git = "https://github.com/takubokudori/hvctrl" }
+hvctrl = { git = "https://github.com/takubokudori/hvctrl", features = ["hypervcmd"] }
 clap = "2.33.3"
