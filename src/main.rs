@@ -3,6 +3,7 @@
 use clap::{App, Arg, ArgMatches};
 use hvctrl::hyperv::HyperVCmd;
 use std::io::Write;
+use hvctrl::types::GuestCmd;
 
 fn input(m: &ArgMatches, name: &str) -> String {
     match m.value_of(name) {
@@ -52,28 +53,28 @@ fn main() {
         .arg(Arg::with_name("SourcePath").short("s").long("SourcePath").takes_value(true))
         .arg(Arg::with_name("DestinationPath").short("d").long("DestinationPath").takes_value(true))
         .get_matches();
-    let cmd = hvctrl::hyperv::HyperVCmd::new();
+    let mut cmd = hvctrl::hyperv::HyperVCmd::new();
     let vm_name = input_vm_name(&m, "VMName", &cmd);
     let src = input(&m, "SourcePath");
     let dst = input(&m, "DestinationPath");
-    let cmd = cmd.vm(&vm_name);
-
     println!("\nVMName: {}", vm_name);
     println!("SourcePath: {}", src);
     println!("DestinationPath: {}", dst);
+    cmd.vm_name(vm_name);
+
     {
         print!("\nOK?[Y/N] ");
         std::io::stdout().flush().expect("Failed to flush stdout");
         let mut s = String::new();
         std::io::stdin().read_line(&mut s).unwrap();
         let s = s.trim();
-        if s.starts_with("N") || s.starts_with("n") {
+        if s.starts_with('N') || s.starts_with('n') {
             println!("aborted!");
             return;
         }
     }
 
-    match cmd.copy_from_host_to_guest(&src, &dst, true, true) {
+    match cmd.copy_from_host_to_guest(&src, &dst) {
         Ok(_) => println!("success!"),
         Err(x) => println!("Failed to copy a file: {:?}", x),
     }
