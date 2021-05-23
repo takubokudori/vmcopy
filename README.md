@@ -1,15 +1,13 @@
 # VMCopy
 
-Sends a file to a VM.
+A tool to send a file to a VM.
+
+This supports Hyper-V, VirtualBox and VMware.
 
 # Usage
 
 ```
-vmcopy.exe --SourcePath "C:\Users\host\a.txt" --DestinationPath "C:\Users\guest\a.txt"
-```
-
-```
-vmcopy.exe --SourcePath "%1"
+vmcopy.exe --src "C:\Users\host\a.txt" --dst "C:\Users\guest"
 ```
 
 # License
