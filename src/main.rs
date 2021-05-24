@@ -120,7 +120,11 @@ impl VmCopyCmd for hvctrl::vmware::VmRun {
     fn gp(&mut self, gp: Option<String>) { self.guest_password(gp); }
 }
 
-fn get_cmd(tool: Tool, exec_path: Option<&str>) -> Box<dyn VmCopyCmd> {
+fn get_cmd(
+    tool: Tool,
+    exec_path: Option<&str>,
+    use_player: bool,
+) -> Box<dyn VmCopyCmd> {
     match tool {
         Tool::HyperV => {
             let mut ret = Box::new(hvctrl::hyperv::HyperVCmd::new());
@@ -142,6 +146,9 @@ fn get_cmd(tool: Tool, exec_path: Option<&str>) -> Box<dyn VmCopyCmd> {
             if let Some(x) = exec_path {
                 ret.executable_path(x);
             }
+            if use_player{
+                ret.use_inventory(false);
+            }
             ret
         }
     }
@@ -155,7 +162,10 @@ fn main() {
                 .short('e')
                 .long("exec")
                 .takes_value(true)
-                .about("A tool to send a file to VM. The parameter is Hyper-V, VirtualBox or VMware"),
+                .about(
+                    "A tool to send a file to VM. The parameter is Hyper-V, \
+                     VirtualBox or VMware",
+                ),
         )
         .arg(
             Arg::new("use_default_exe")
@@ -197,6 +207,11 @@ fn main() {
                 .takes_value(true)
                 .about("A guest password at logon"),
         )
+        .arg(
+            Arg::new("use_player")
+                .long("player")
+                .about("use VMware Player"),
+        )
         .get_matches();
 
     let tool = m.value_of("tool").map_or_else(
@@ -220,7 +235,8 @@ fn main() {
     } else {
         Some(exec_path.as_str())
     };
-    let mut cmd = get_cmd(tool, exec_path);
+    let use_player = m.is_present("use_player");
+    let mut cmd = get_cmd(tool, exec_path, use_player);
 
     let vm_name = input_vm_name(&m, "vm_name", cmd.as_ref());
     match tool {
