@@ -1,5 +1,7 @@
 # VMCopy
 
+This repository has been moved to [hvctrl](https://github.com/takubokudori/hvctrl/tree/master/examples/vmcopy).
+
 A tool to send a file to a VM.
 
 This supports Hyper-V, VirtualBox and VMware.
